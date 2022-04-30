@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,14 +33,10 @@ public class Team  {
 	
 	@Comment("팀명")
 	@Column(name="TEAM_NAME")
-	String teamName;
-	
-	/*@OneToOne
-	@JoinColumn(name="USER_ID")
-	private User manager;*/ 
+	String teamName;	
 		
 	//@OneToMany(mappedBy="team")
-	@OneToMany(mappedBy="team", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy="team", cascade = CascadeType.ALL, orphanRemoval = true)
 	List<Member> members = new ArrayList<Member>();			
 	
 	public Team(String teamName) {
@@ -55,5 +50,10 @@ public class Team  {
 	public void addMemberList(List<Member> memberList) {
 		this.members.addAll(memberList);
 	}
+	
+	public void deleteMember(int index) {
+		this.members.remove(index);
+	}
+	
 	
 }

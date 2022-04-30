@@ -27,7 +27,7 @@ public class Member  {
 	Long memberId;
 	
 	@ManyToOne
-	@JoinColumn(name="TEAM_ID")
+	@JoinColumn(name="TEAM_ID", nullable = false)
 	Team team;
 				
 	public Member(Team team) {		
