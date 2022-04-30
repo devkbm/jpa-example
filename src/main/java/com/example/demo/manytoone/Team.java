@@ -47,6 +47,10 @@ public class Team  {
 		this.teamName = teamName;
 	}						
 	
+	public void addMember(Member member) {
+		this.members.add(member);
+	}
+	
 	public void addMemberList(List<Member> memberList) {
 		this.members.addAll(memberList);
 	}

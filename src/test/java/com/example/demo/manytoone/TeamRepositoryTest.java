@@ -60,8 +60,8 @@ public class TeamRepositoryTest {
 		Team team = new Team("test");
 		Member member1 = new Member(team);
 		Member member2 = new Member(team);
-		List<Member> memberList = Arrays.asList(member1,member2);
-		team.addMemberList(memberList);		
+		team.addMember(member1);
+		team.addMember(member2);					
 		repository.saveAndFlush(team);
 		
 		//When			
