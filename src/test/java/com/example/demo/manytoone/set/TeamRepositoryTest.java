@@ -1,9 +1,6 @@
-package com.example.demo.manytoone;
+package com.example.demo.manytoone.set;
 
 import static org.assertj.core.api.Assertions.*;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class TeamRepositoryTest {
@@ -23,54 +23,52 @@ public class TeamRepositoryTest {
 	@Test
 	void save() {
 		//Given
-		Team team = new Team("test");
+		Team team = new Team("TEAMA", "test");
 		
 		//When
 		repository.save(team);
 				
 		//Then
+		assertThat(team.getTeamId()).isEqualTo("TEAMA");
 		assertThat(team.getTeamName()).isEqualTo("test");
 	}
 	
-	@DisplayName("멤버 저장")
+	@DisplayName("팀 가입")
 	@Test
 	void saveMemberList() {
 		//Given
-		Team team = new Team("test");
-		Member member1 = new Member(team);
-		Member member2 = new Member(team);
-		List<Member> memberList = Arrays.asList(member1,member2);
+		Team team = new Team("TEAMA", "test");
+		team.joinMember("A", "멤버A");
+		team.joinMember("B", "멤버B");					
 				
-		//When
-		team.addMemberList(memberList);
+		//When		
 		repository.save(team);
 				
 		//Then
+		assertThat(team.getTeamId()).isEqualTo("TEAMA");
 		assertThat(team.getTeamName()).isEqualTo("test");
 		assertThat(team.getMembers().size()).isEqualTo(2);
-		assertThat(team.getMembers().get(0)).isEqualTo(member1);
-		assertThat(team.getMembers().get(1)).isEqualTo(member2);
-		
+		assertThat(team.getMember("A").getMemberName()).isEqualTo("멤버A");
+		assertThat(team.getMember("B").getMemberName()).isEqualTo("멤버B");				
 	}
-		
-	@DisplayName("멤버 삭제")
+				
+	@DisplayName("팀 탈퇴")
 	@Test
 	void deleteMember() {
 		//Given
-		Team team = new Team("test");
-		Member member1 = new Member(team);
-		Member member2 = new Member(team);
-		team.addMember(member1);
-		team.addMember(member2);					
+		Team team = new Team("TEAMA", "test");		
+		team.joinMember("A", "멤버A");
+		team.joinMember("B", "멤버B");						
 		repository.saveAndFlush(team);
 		
-		//When			
-		team.deleteMember(1);
-		repository.save(team);
-		
+		log.info(team.toString());
+		team.leaveMember(team.getMember("B"));
+		//When					
+		repository.saveAndFlush(team);
+		log.info(team.toString());
 		//Then
-		assertThat(team.getTeamName()).isEqualTo("test");
-		assertThat(team.getMembers().get(0)).isEqualTo(member1);
+		assertThat(team.getTeamId()).isEqualTo("TEAMA");
+		assertThat(team.getTeamName()).isEqualTo("test");		
 		assertThat(team.getMembers().size()).isEqualTo(1);
 	}
 }
