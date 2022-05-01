@@ -48,7 +48,7 @@ public class CarOwnerRepositoryTest {
 		assertThat(owner.getName()).isEqualTo("TEST");
 		assertThat(owner.getCar("서울호3933").getCarKind()).isEqualTo("QM6");
 		assertThat(owner.getCar("서울호3933").getCarNumber()).isEqualTo("서울호3933");
-		assertThat(owner.carMap.size()).isEqualTo(2);
+		assertThat(owner.carMap.size()).isEqualTo(1);
 	}
 	
 	@DisplayName("차량 판매")
