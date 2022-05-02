@@ -1,13 +1,13 @@
 package com.example.demo.manytoone.list;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,38 +32,38 @@ import lombok.ToString;
 public class Blog  {
 	
 	@Id		
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="BLOG_ID")
-	String id;
+	Long id;
 	
 	@Comment("블로그명")
 	@Column(name="BLOG_NAME")
 	String blogName;
 		
-	@OneToMany(mappedBy="team", cascade = CascadeType.ALL, orphanRemoval = true)
-	List<BlogComment> members = new ArrayList<BlogComment>();			
+	@OneToMany(mappedBy="blog", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<BlogComment> comments = new ArrayList<BlogComment>();			
 	
-	public Blog(String id, String blogName) {
-		this.id = id;
+	public Blog(String blogName) {		
 		this.blogName = blogName;		
 	}					
 	
-	public BlogComment getMember(String commntId) {
-		BlogComment member = null;
+	public BlogComment getComment(Long commentId) {
+		BlogComment comment = null;
 		
 		// java stream
-		member = this.members.stream()
-				             .filter(e -> e.memberId.equals(commntId))
+		comment = this.comments.stream()
+				             .filter(e -> e.commentId.equals(commentId))
 							 .findFirst().orElse(null);
 		
-		return member;
+		return comment;
 	}
 	
-	public void joinMember(String memberId, String memberName) {
-		this.getMembers().add(new BlogComment(this, memberId, memberName));
+	public void addComment(String comment) {
+		this.comments.add(new BlogComment(this, comment));
 	}	
 	
-	public void leaveMember(BlogComment member) {
-		this.getMembers().remove(member);
+	public void deleteComment(BlogComment comment) {
+		this.comments.remove(comment);
 	}
 	
 	
