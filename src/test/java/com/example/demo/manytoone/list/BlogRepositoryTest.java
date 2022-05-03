@@ -31,4 +31,44 @@ public class BlogRepositoryTest {
 		//Then
 		assertThat(blog.getBlogName()).isEqualTo("JPA학습");
 	}
+	
+	
+	@DisplayName("댓글 저장")
+	@Test
+	void saveComment() {
+		//Given
+		Blog blog = new Blog("JPA학습");		
+		
+		//When
+		blog.addComment("댓글1");
+		blog.addComment("댓글2");		
+		repository.save(blog);
+		log.info(blog.toString());
+		
+		//Then
+		assertThat(blog.getBlogName()).isEqualTo("JPA학습");
+		assertThat(blog.getComments().size()).isEqualTo(2);
+		assertThat(blog.getComments().get(0).getComment()).isEqualTo("댓글1");
+		assertThat(blog.getComments().get(1).getComment()).isEqualTo("댓글2");
+	}
+	
+	@DisplayName("댓글 삭제")
+	@Test
+	void deleteComment() {
+		//Given
+		Blog blog = new Blog("JPA학습");
+		blog.addComment("댓글1");
+		blog.addComment("댓글2");
+		repository.saveAndFlush(blog);
+								
+		//When
+		blog.deleteComment(blog.getComments().get(0));		
+		repository.save(blog);
+		log.info(blog.toString());
+		
+		//Then
+		assertThat(blog.getBlogName()).isEqualTo("JPA학습");
+		assertThat(blog.getComments().size()).isEqualTo(1);		
+		assertThat(blog.getComments().get(0).getComment()).isEqualTo("댓글2");
+	}
 }

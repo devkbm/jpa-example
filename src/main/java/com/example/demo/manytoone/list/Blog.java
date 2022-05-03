@@ -23,6 +23,9 @@ import lombok.ToString;
  * 블로그[1] - 댓글[N]				<br>
  * 블로그에 여러댓글을 이력할 수 있다.	<br>
  * 댓글은 한번에 하나의 블로그에만 입력할 수 있다. 
+ * 
+ * 제약사항
+ * OneToMany List 두개이상 있을경우 MultipleBagFetchException 발생
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -51,7 +54,7 @@ public class Blog  {
 		BlogComment comment = null;
 		
 		// java stream
-		comment = this.comments.stream()
+		comment = this.getComments().stream()
 				             .filter(e -> e.commentId.equals(commentId))
 							 .findFirst().orElse(null);
 		
