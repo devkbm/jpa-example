@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
@@ -42,7 +43,8 @@ public class Blog  {
 	@Comment("블로그명")
 	@Column(name="BLOG_NAME")
 	String blogName;
-		
+	
+	@OrderBy("commentId asc")
 	@OneToMany(mappedBy="blog", cascade = CascadeType.ALL, orphanRemoval = true)
 	List<BlogComment> comments = new ArrayList<BlogComment>();			
 	
